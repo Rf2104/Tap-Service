@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1046325272025",
+    "project_id": "tapservice-1111",
+    "storage_bucket": "tapservice-1111.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1046325272025:android:4287a92a30f1f73af08dc8",
+        "android_client_info": {
+          "package_name": "com.example.projeto_final"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyARYchwg9SU85-S57jz3rViKV02TUkBSvo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
