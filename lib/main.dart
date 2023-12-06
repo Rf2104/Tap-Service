@@ -11,7 +11,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(MaterialApp(
-    home: const RegisterPage(),
+    home: const SearchPage(),
     routes: {
       '/login': (context) => const LoginPage(),
       '/register': (context) => const RegisterPage(),
