@@ -269,6 +269,11 @@ class _LoginPageStage extends State<LoginPage> {
     User? user = await _auth.signInWithEmailAndPassword(email, password);
 
     if (user != null) {
+      showDialog(
+      context: context,
+      builder: (context) => const Center(
+        child: CircularProgressIndicator(),
+    ));
       print("User signed in!");
       Navigator.pushNamed(context, '/profile');
     } else {

@@ -451,6 +451,12 @@ class _RegisterPageState extends State<RegisterPage> {
         aboutMe: '',
         jobs: [],
       );
+
+      showDialog(
+            context: context,
+            builder: (context) => const Center(
+              child: CircularProgressIndicator(),
+          ));
       await userRepo.createUser(user);
       Navigator.pushNamed(context, '/profile');
     }
