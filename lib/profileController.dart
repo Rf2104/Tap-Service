@@ -62,4 +62,12 @@ class ProfileController extends GetxController {
   getUserImage(UserModel user) {
     return _userRepo.getUserImage(user);
   }
+  
+  getAboutMe(UserModel user) {
+    if (user.aboutMe.isNotEmpty) {
+      return user.aboutMe;
+    } else {
+      return "Tell something about you!";
+    }
+  }
 }

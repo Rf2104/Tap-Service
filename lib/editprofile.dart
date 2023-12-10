@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:projeto_final/profileController.dart';
 import 'package:projeto_final/user_model.dart';
 import 'package:hovering/hovering.dart';
@@ -25,50 +26,62 @@ class _EditProfilePageState extends State<EditProfilePage> {
   final location = TextEditingController();
   final aboutMe = TextEditingController();
   final jobs = TextEditingController();
-  final image = TextEditingController();
+  final imageController = TextEditingController();
   final password = TextEditingController();
 
   bool isImageSelected = false;
   File? imageFile;
-  late String imageName; // Declare the image name variable
+  late String imageName = imageController.text; // Declare the image name variable
+
+  Future<Widget> _getImage(BuildContext context, String imageName) async {
+    return FirebaseStorageService.loadImage(context, imageName).then((value) {
+      return Image.network(
+        value.toString(),
+        fit: BoxFit.cover,
+        width: 100, // Defina a largura desejada
+        height: 100, // Defina a altura desejada
+      );
+    });
+  }
 
   _pickImagefromGallery() async {
-    try {
-      final pickedImage =
-          await ImagePicker().pickImage(source: ImageSource.gallery);
-      if (pickedImage != null) {
-        imageFile = File(pickedImage.path);
-        imageName = DateTime.now()
-            .millisecondsSinceEpoch
-            .toString(); // Assign the image name
+  try {
+    final pickedImage = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (pickedImage != null) {
+      imageFile = File(pickedImage.path);
+      imageName = DateTime.now().millisecondsSinceEpoch.toString();
 
-        // Upload image to Firebase Storage
-        final firebase_storage.Reference storageReference = firebase_storage
-            .FirebaseStorage.instance
-            .ref()
-            .child('$imageName.jpg');
+      // Upload image to Firebase Storage
+      final firebase_storage.Reference storageReference = firebase_storage
+          .FirebaseStorage.instance
+          .ref()
+          .child('$imageName.jpg');
 
-        final firebase_storage.UploadTask uploadTask =
-            storageReference.putFile(imageFile!);
+      final firebase_storage.UploadTask uploadTask = storageReference.putFile(imageFile!);
 
-        await uploadTask.whenComplete(() async {
-          // Get the download URL of the uploaded image
-          final String downloadURL = await storageReference.getDownloadURL();
+      await uploadTask.whenComplete(() async {
+        // Get the download URL of the uploaded image
+        final String downloadURL = await storageReference.getDownloadURL();
 
-          // downloadURL to store in Firestore database
-          print('Image uploaded. Download URL: $downloadURL');
-        });
+        // downloadURL to store in Firestore database
+        print('Image uploaded. Download URL: $downloadURL');
+      });
 
-        setState(() {
+      setState(() {
+        if (imageFile != null) {
           isImageSelected = true;
-        });
-      } else {
-        print('User didn\'t pick any image.');
-      }
-    } catch (e) {
-      print(e.toString());
+        } else {
+          isImageSelected = false;
+        }
+      });
+    } else {
+      print('User didn\'t pick any image.');
     }
+  } catch (e) {
+    print(e.toString());
   }
+}
+
 
   Future<UserModel> userDataFuture = Future<UserModel>.value(UserModel(
       name: '',
@@ -77,7 +90,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       location: '',
       aboutMe: '',
       jobs: [],
-      image: null)); // Change UserModel() to your initial/default user data
+      image: "")); // Change UserModel() to your initial/default user data
 
   @override
   void initState() {
@@ -116,7 +129,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         location.text = userData.location;
                         aboutMe.text = userData.aboutMe;
                         jobs.text = userData.jobs.toString();
-                        image.text = userData.image.toString();
+                        imageController.text = userData.image.toString();
                         password.text = userData.password;
                         return Stack(
                           children: [
@@ -149,19 +162,40 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                       color: Colors.white,
                                     ),
                                     child: isImageSelected ||
-                                            userData.image != null
-                                        ? ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(50),
-                                            child: userData.image != null
-                                                ? (
-                                                  Image.network(
-                                                    controller.getUserImage(userData),
-                                                    fit: BoxFit.cover,
+                                            userData.image != ""
+                                        ? ClipOval(
+                                            child: userData.image != "" && isImageSelected == false
+                                                ? (FutureBuilder(
+                                                    future: _getImage(context,
+                                                        userData.image!),
+                                                    builder:
+                                                        (context, snapshot) {
+                                                      if (snapshot
+                                                              .connectionState ==
+                                                          ConnectionState
+                                                              .done) {
+                                                        return Center(
+                                                            child:
+                                                                snapshot.data);
+                                                      }
+                                                      if (snapshot
+                                                              .connectionState ==
+                                                          ConnectionState
+                                                              .waiting) {
+                                                        return const Center(
+                                                            child:
+                                                                CircularProgressIndicator());
+                                                      }
+                                                      return const Center(
+                                                          child: Text(
+                                                              "Something went wrong!"));
+                                                    },
                                                   ))
                                                 : Image.file(
                                                     imageFile!,
                                                     fit: BoxFit.cover,
+                                                    width: 100,
+                                                    height: 100,
                                                   ),
                                           )
                                         : const Icon(
@@ -190,7 +224,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                       password: password.text.trim(),
                                       jobs: controller
                                           .parseJobs(jobs.text.trim()),
-                                      image: image.text.trim(),
+                                      image: imageController.text.trim(),
                                     );
 
                                     await controller.updateUser(userData);
@@ -437,5 +471,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
         ),
       ),
     );
+  }
+}
+
+class FirebaseStorageService extends ChangeNotifier {
+  FirebaseStorageService();
+
+  static Future<dynamic> loadImage(BuildContext context, String image) async {
+    return await FirebaseStorage.instance.ref().child(image).getDownloadURL();
   }
 }

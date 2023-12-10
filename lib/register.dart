@@ -449,6 +449,7 @@ class _RegisterPageState extends State<RegisterPage> {
         password: password.trim(),
         location: '',
         aboutMe: '',
+        image: '',
         jobs: [],
       );
 

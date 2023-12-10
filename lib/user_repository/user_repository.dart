@@ -63,7 +63,10 @@ class UserRepository {
 
   Future<void> updateUserImage(String image, UserModel user) async {
     final userDoc = _db.collection('users').doc(user.id);
-    final imageName = "gs://tapservice-1111.appspot.com/${image}.jpg";
+    final imageName = "${image}.jpg";
+    if (image == user.image) {
+      return;
+    }
     // Check if the document exists
     try {
       // Check if the document exists
