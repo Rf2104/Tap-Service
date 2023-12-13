@@ -399,6 +399,12 @@ class _RegisterPageState extends State<RegisterPage> {
 
     User? user = await _auth.signUpWithEmailAndPassword(email, password);
 
+          showDialog(
+            context: context,
+            builder: (context) => const Center(
+              child: CircularProgressIndicator(),
+          ));
+
     if (user != null) {
       print("User created successfully");
       Navigator.pushNamed(context, "/profile");
@@ -449,15 +455,9 @@ class _RegisterPageState extends State<RegisterPage> {
         password: password.trim(),
         location: '',
         aboutMe: '',
-        image: '',
         jobs: [],
       );
 
-      showDialog(
-            context: context,
-            builder: (context) => const Center(
-              child: CircularProgressIndicator(),
-          ));
       await userRepo.createUser(user);
       Navigator.pushNamed(context, '/profile');
     }

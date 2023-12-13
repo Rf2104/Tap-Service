@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -19,6 +20,7 @@ class EditProfilePage extends StatefulWidget {
       _EditProfilePageState(); // Fixed typo here
 }
 
+
 class _EditProfilePageState extends State<EditProfilePage> {
   final controller = Get.put(ProfileController());
   final email = TextEditingController();
@@ -28,10 +30,15 @@ class _EditProfilePageState extends State<EditProfilePage> {
   final jobs = TextEditingController();
   final imageController = TextEditingController();
   final password = TextEditingController();
+  final user = FirebaseAuth.instance.currentUser!;
 
   bool isImageSelected = false;
   File? imageFile;
-  late String imageName = imageController.text; // Declare the image name variable
+  late String imageName = ""; // Declare the image name variable
+  late String id;
+  late UserModel userData;
+  bool first = false;
+  bool loaded = false;
 
   Future<Widget> _getImage(BuildContext context, String imageName) async {
     return FirebaseStorageService.loadImage(context, imageName).then((value) {
@@ -41,47 +48,49 @@ class _EditProfilePageState extends State<EditProfilePage> {
         width: 100, // Defina a largura desejada
         height: 100, // Defina a altura desejada
       );
+      
     });
   }
 
   _pickImagefromGallery() async {
-  try {
-    final pickedImage = await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (pickedImage != null) {
-      imageFile = File(pickedImage.path);
-      imageName = DateTime.now().millisecondsSinceEpoch.toString();
+    try {
+      final pickedImage =
+          await ImagePicker().pickImage(source: ImageSource.gallery);
+      if (pickedImage != null) {
+        imageFile = File(pickedImage.path);
+        imageName = DateTime.now().millisecondsSinceEpoch.toString();
 
-      // Upload image to Firebase Storage
-      final firebase_storage.Reference storageReference = firebase_storage
-          .FirebaseStorage.instance
-          .ref()
-          .child('$imageName.jpg');
+        // Upload image to Firebase Storage
+        final firebase_storage.Reference storageReference = firebase_storage
+            .FirebaseStorage.instance
+            .ref()
+            .child('$imageName.jpg');
 
-      final firebase_storage.UploadTask uploadTask = storageReference.putFile(imageFile!);
+        final firebase_storage.UploadTask uploadTask =
+            storageReference.putFile(imageFile!);
 
-      await uploadTask.whenComplete(() async {
-        // Get the download URL of the uploaded image
-        final String downloadURL = await storageReference.getDownloadURL();
+        await uploadTask.whenComplete(() async {
+          // Get the download URL of the uploaded image
+          final String downloadURL = await storageReference.getDownloadURL();
 
-        // downloadURL to store in Firestore database
-        print('Image uploaded. Download URL: $downloadURL');
-      });
+          // downloadURL to store in Firestore database
+          print('Image uploaded. Download URL: $downloadURL');
+        });
 
-      setState(() {
-        if (imageFile != null) {
-          isImageSelected = true;
-        } else {
-          isImageSelected = false;
-        }
-      });
-    } else {
-      print('User didn\'t pick any image.');
+        setState(() {
+          if (imageFile != null) {
+            isImageSelected = true;
+          } else {
+            isImageSelected = false;
+          }
+        });
+      } else {
+        print('User didn\'t pick any image.');
+      }
+    } catch (e) {
+      print(e.toString());
     }
-  } catch (e) {
-    print(e.toString());
   }
-}
-
 
   Future<UserModel> userDataFuture = Future<UserModel>.value(UserModel(
       name: '',
@@ -97,7 +106,20 @@ class _EditProfilePageState extends State<EditProfilePage> {
     super.initState();
 
     // Fetch user data
-    userDataFuture = controller.getUserData();
+        controller.getUserData().then((data) {
+        setState(() {
+        userData = data;
+        id = userData.id ?? '';
+        email.text = userData?.email ?? '';
+        name.text = userData?.name ?? '';
+        location.text = userData?.location ?? '';
+        aboutMe.text = userData?.aboutMe ?? '';
+        jobs.text = userData?.jobs?.toString() ?? '';
+        imageController.text = userData?.image ?? '';
+        password.text = userData?.password ?? '';;
+        imageName = imageController.text;
+      });
+    });
   }
 
   @override
@@ -121,16 +143,19 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   future: userDataFuture,
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.done) {
-                      if (snapshot.hasData) {
-                        UserModel userData = snapshot.data as UserModel;
-                        final id = userData.id;
-                        email.text = userData.email;
-                        name.text = userData.name;
-                        location.text = userData.location;
-                        aboutMe.text = userData.aboutMe;
-                        jobs.text = userData.jobs.toString();
-                        imageController.text = userData.image.toString();
-                        password.text = userData.password;
+                      if (snapshot.hasData && snapshot.data != null) {
+                        if (first && snapshot.hasData) {
+                          userData = snapshot.data as UserModel;
+                          id = userData.id!;
+                          email.text = userData.email;
+                          name.text = userData.name;
+                          location.text = userData.location;
+                          aboutMe.text = userData.aboutMe;
+                          jobs.text = userData.jobs.toString();
+                          imageController.text = userData.image.toString();
+                          password.text = userData.password;
+                          first = false;
+                        }
                         return Stack(
                           children: [
                             Positioned(
@@ -161,13 +186,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                     decoration: BoxDecoration(
                                       color: Colors.white,
                                     ),
-                                    child: isImageSelected ||
-                                            userData.image != ""
+                                    child: isImageSelected || imageName != ""
                                         ? ClipOval(
-                                            child: userData.image != "" && isImageSelected == false
+                                            child: imageName != "" &&
+                                                    isImageSelected == false
                                                 ? (FutureBuilder(
-                                                    future: _getImage(context,
-                                                        userData.image!),
+                                                    future: _getImage(context,imageController.text),
                                                     builder:
                                                         (context, snapshot) {
                                                       if (snapshot
@@ -191,12 +215,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                                               "Something went wrong!"));
                                                     },
                                                   ))
-                                                : Image.file(
-                                                    imageFile!,
-                                                    fit: BoxFit.cover,
-                                                    width: 100,
-                                                    height: 100,
-                                                  ),
+                                                : imageFile != null
+                                                    ? Image.file(
+                                                        imageFile!,
+                                                        fit: BoxFit.cover,
+                                                        width: 100,
+                                                        height: 100,
+                                                      )
+                                                    : const SizedBox.shrink(),
                                           )
                                         : const Icon(
                                             Icons.add_a_photo,

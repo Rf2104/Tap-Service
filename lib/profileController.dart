@@ -41,6 +41,15 @@ class ProfileController extends GetxController {
     return jobs;
   }
 
+  getUserID(){
+    final id = FirebaseAuth.instance.currentUser!.uid;
+    if (id != null) {
+      return id;
+    } else {
+      Get.snackbar("Error", "Something went wrong!");
+    }
+  }
+
   getUserData() {
     final email = FirebaseAuth.instance.currentUser!.email;
     if (email != null) {

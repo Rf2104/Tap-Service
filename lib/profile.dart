@@ -36,6 +36,26 @@ class _ProfilePageStage extends State<ProfilePage> {
     });
   }
 
+  Future<void> _navigateToEditProfile(BuildContext context) async {
+  // Display CircularProgressIndicator
+  showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (BuildContext context) {
+      return Center(
+        child: CircularProgressIndicator(),
+      );
+    },
+  );
+
+  // Simulate some processing time
+  await Future.delayed(Duration(seconds: 2));
+
+  // Navigate to the edit profile page
+  Navigator.pop(context); // Close the CircularProgressIndicator
+  Navigator.pushNamed(context, '/editprofile');
+}
+
   @override
   Widget build(BuildContext context) {
     final physicalScreenSize = MediaQuery.of(context).size;
@@ -326,6 +346,7 @@ class _ProfilePageStage extends State<ProfilePage> {
                                               height: 100,
                                               decoration: BoxDecoration(
                                                 shape: BoxShape.circle,
+                                                color: Color(0xFFF9E0CE),
                                                 border: Border.all(
                                                   color: Colors
                                                       .black, // Set your desired border color here
@@ -387,8 +408,7 @@ class _ProfilePageStage extends State<ProfilePage> {
                                                 top: 8,
                                                 child: GestureDetector(
                                                   onTap: () {
-                                                    Navigator.pushNamed(context,
-                                                        '/editprofile');
+                                                    Navigator.pushNamed(context, '/editprofile');
                                                   },
                                                   child: const SizedBox(
                                                     width: 109,
