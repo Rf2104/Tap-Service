@@ -3,17 +3,20 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:projeto_final/messages.dart';
+import 'package:projeto_final/homepage.dart';
 import 'package:projeto_final/profileController.dart';
+import 'package:projeto_final/search.dart';
 import 'package:projeto_final/user_model.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key});
 
   @override
-  State<ProfilePage> createState() => _ProfilePageStage();
+  State<ProfilePage> createState() => _ProfilePageState();
 }
 
-class _ProfilePageStage extends State<ProfilePage> {
+class _ProfilePageState extends State<ProfilePage> {
   final controller = Get.put(ProfileController());
   final email = TextEditingController();
   final name = TextEditingController();
@@ -405,7 +408,7 @@ class _ProfilePageStage extends State<ProfilePage> {
                                               ),
                                               Positioned(
                                                 left: 0,
-                                                top: 8,
+                                                top: 9,
                                                 child: GestureDetector(
                                                   onTap: () {
                                                     Navigator.pushNamed(context, '/editprofile');
@@ -414,12 +417,12 @@ class _ProfilePageStage extends State<ProfilePage> {
                                                     width: 109,
                                                     height: 39,
                                                     child: Text(
-                                                      'Edit',
+                                                      'Edit profile',
                                                       textAlign:
                                                           TextAlign.center,
                                                       style: TextStyle(
                                                         color: Colors.black,
-                                                        fontSize: 20,
+                                                        fontSize: 18,
                                                         fontFamily: 'Roboto',
                                                         fontWeight:
                                                             FontWeight.w700,
@@ -433,62 +436,22 @@ class _ProfilePageStage extends State<ProfilePage> {
                                           ),
                                         ),
                                       ),
+                                      //Sign out button icon
                                       Positioned(
-                                        left: 25,
-                                        top: 30,
+                                        left: 15,
+                                        top: 50,
                                         child: Container(
-                                          width: 109,
-                                          height: 39,
-                                          child: Stack(
-                                            children: [
-                                              Positioned(
-                                                left: 0,
-                                                top: 0,
-                                                child: Container(
-                                                  width: 109,
-                                                  height: 39,
-                                                  decoration: ShapeDecoration(
-                                                    shape:
-                                                        RoundedRectangleBorder(
-                                                      side:
-                                                          BorderSide(width: 2),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              15),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                              Positioned(
-                                                left: 0,
-                                                top: 8,
-                                                child: GestureDetector(
-                                                  onTap: () {
-                                                    FirebaseAuth.instance
-                                                        .signOut();
-                                                    Navigator.pushNamed(
-                                                        context, '/login');
-                                                  },
-                                                  child: SizedBox(
-                                                    width: 109,
-                                                    height: 39,
-                                                    child: Text(
-                                                      'Sign out',
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      style: TextStyle(
-                                                        color: Colors.black,
-                                                        fontSize: 20,
-                                                        fontFamily: 'Roboto',
-                                                        fontWeight:
-                                                            FontWeight.w700,
-                                                        height: 0,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
+                                          width: 50,
+                                          height: 50,
+                                          child: IconButton(
+                                            onPressed: () {
+                                              FirebaseAuth.instance.signOut();
+                                              Navigator.pushNamed(
+                                                  context, '/login');
+                                            },
+                                            icon: Icon(Icons.logout),
+                                            color: Colors.black,
+                                            iconSize: 35,
                                           ),
                                         ),
                                       ),
@@ -511,52 +474,6 @@ class _ProfilePageStage extends State<ProfilePage> {
                   ),
                 ),
               ),
-            ),
-          ),
-          Container(
-            width: physicalScreenSize.width,
-            height: 70,
-            decoration: BoxDecoration(
-              color: Color(0xFFF9E0CE),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ClipOval(
-                  child: Container(
-                    width: 55,
-                    height: 55,
-                    color: Color(0xFFD94E28),
-                    child: Transform.translate(
-                      offset: Offset(-3.0, 0),
-                      child: IconButton(
-                        onPressed: () {
-                          Navigator.pushNamed(context, '/profile');
-                        },
-                        icon: Icon(Icons.person),
-                        color: Colors.white,
-                        iconSize: 45,
-                      ),
-                    ),
-                  ),
-                ),
-                IconButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/search');
-                  },
-                  icon: Icon(Icons.search),
-                  color: Colors.black,
-                  iconSize: 45,
-                ),
-                IconButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/profile');
-                  },
-                  icon: Icon(Icons.local_post_office),
-                  color: Colors.black,
-                  iconSize: 40,
-                ),
-              ],
             ),
           ),
         ],

@@ -167,7 +167,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                 height: 40,
                                 child: IconButton(
                                   onPressed: () {
-                                    Navigator.pushNamed(context, '/profile');
+                                    Navigator.pushNamed(context, '/homepage');
                                   },
                                   icon: Icon(Icons.arrow_back_ios_new_rounded),
                                   color: Colors.black,
@@ -273,7 +273,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                     await controller.updateUser(userData);
                                     await controller.updateUserImage(
                                         imageName, userData);
-                                    Navigator.pushNamed(context, '/profile');
+                                    Navigator.pushNamed(context, '/homepage');
                                   },
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor:

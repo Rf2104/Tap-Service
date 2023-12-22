@@ -275,7 +275,7 @@ class _LoginPageStage extends State<LoginPage> {
         child: CircularProgressIndicator(),
     ));
       print("User signed in!");
-      Navigator.pushNamed(context, '/profile');
+      Navigator.pushNamed(context, '/homepage');
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(

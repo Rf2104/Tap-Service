@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:projeto_final/homepage.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({Key? key});
 
   @override
-  State<SearchPage> createState() => _SearchPageStage();
+  State<SearchPage> createState() => _SearchPageState();
 }
 
-class _SearchPageStage extends State<SearchPage> {
+class _SearchPageState extends State<SearchPage> {
+  int _currentIndex = 1;
   @override
   Widget build(BuildContext context) {
     final physicalScreenSize = MediaQuery.of(context).size;
@@ -269,8 +271,8 @@ class _SearchPageStage extends State<SearchPage> {
                             child: Stack(
                               children: [
                                 Positioned(
-                                  left: physicalScreenSize.width / 2 + 10,
-                                  top: 530,
+                                  left: 0,
+                                  top: 10,
                                   child: SizedBox(
                                     width: 145,
                                     height: 20,
@@ -288,8 +290,8 @@ class _SearchPageStage extends State<SearchPage> {
                                   ),
                                 ),
                                 Positioned(
-                                  left: physicalScreenSize.width / 2 + 28,
-                                  top: 558,
+                                  left: 15,
+                                  top: 40,
                                   child: Container(
                                     width: 106,
                                     height: 110,
@@ -310,20 +312,65 @@ class _SearchPageStage extends State<SearchPage> {
                       Positioned(
                         left: physicalScreenSize.width / 2 - 155,
                         top: 685,
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.pushNamed(context, '/resultados');
+                          },
                         child: Container(
-                          width: 145,
-                          height: 145,
-                          decoration: ShapeDecoration(
-                            color: const Color(0xFFD9D9D9),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(25),
+                            width: 145,
+                            height: 145,
+                            decoration: ShapeDecoration(
+                              color: const Color(0xFFD9D9D9),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(25),
+                              ),
                             ),
-                          ),
-                        ),
+                            child: Stack(
+                              children: [
+                                Positioned(
+                                  left: 0,
+                                  top: 10,
+                                  child: SizedBox(
+                                    width: 145,
+                                    height: 20,
+                                    child: Text(
+                                      'Painter',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 19,
+                                        fontFamily: 'Roboto Mono',
+                                        fontWeight: FontWeight.w500,
+                                        height: 0,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Positioned(
+                                  left: 18,
+                                  top: 37,
+                                  child: Container(
+                                    width: 106,
+                                    height: 110,
+                                    decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                        image: Image.asset('assets/pintor.png')
+                                            .image,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ))),
                       ),
                       Positioned(
                         left: physicalScreenSize.width / 2 + 10,
                         top: 685,
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.pushNamed(context, '/resultados');
+                          },
                         child: Container(
                           width: 145,
                           height: 145,
@@ -333,121 +380,48 @@ class _SearchPageStage extends State<SearchPage> {
                               borderRadius: BorderRadius.circular(25),
                             ),
                           ),
-                        ),
-                      ),
-                      Positioned(
-                        left: physicalScreenSize.width / 2 - 155,
-                        top: 700,
-                        child: SizedBox(
-                          width: 145,
-                          height: 20,
-                          child: Text(
-                            'Painter',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 19,
-                              fontFamily: 'Roboto Mono',
-                              fontWeight: FontWeight.w500,
-                              height: 0,
+                          child: Stack(children: [
+                            Positioned(
+                              left: 0,
+                              top: 10,
+                              child: SizedBox(
+                                width: 145,
+                                height: 20,
+                                child: Text(
+                                  'Gardener',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 19,
+                                    fontFamily: 'Roboto Mono',
+                                    fontWeight: FontWeight.w500,
+                                    height: 0,
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        left: physicalScreenSize.width / 2 - 135,
-                        top: 717,
-                        child: Container(
-                          width: 106,
-                          height: 110,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: Image.asset('assets/pintor.png').image,
-                              fit: BoxFit.cover,
+                            Positioned(
+                              left: 10,
+                              top: 45,
+                              child: Container(
+                                width: 123,
+                                height: 95,
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: Image.asset('assets/jardineiro.png')
+                                        .image,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
+                          ]),
                         ),
-                      ),
-                      Positioned(
-                        left: physicalScreenSize.width / 2 + 10,
-                        top: 696,
-                        child: SizedBox(
-                          width: 145,
-                          height: 20,
-                          child: Text(
-                            'Gardener',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 19,
-                              fontFamily: 'Roboto Mono',
-                              fontWeight: FontWeight.w500,
-                              height: 0,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        left: physicalScreenSize.width / 2 + 20,
-                        top: 732,
-                        child: Container(
-                          width: 123,
-                          height: 95,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: Image.asset('assets/jardineiro.png').image,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                      ),
+                      )),
                     ],
                   ),
                 ),
               ),
-            ),
-          ),
-          Container(
-            width: physicalScreenSize.width,
-            height: 70,
-            decoration: BoxDecoration(
-              color: Color(0xFFF9E0CE),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                IconButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/profile');
-                  },
-                  icon: Icon(Icons.person),
-                  color: Colors.black,
-                  iconSize: 45,
-                ),
-                ClipOval(
-                  child: Container(
-                    width: 55,
-                    height: 55,
-                    color: Color(0xFFD94E28),
-                    child: IconButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/search');
-                      },
-                      icon: Icon(Icons.search),
-                      color: Colors.white,
-                      iconSize: 45,
-                    ),
-                  ),
-                ),
-                IconButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/profile');
-                  },
-                  icon: Icon(Icons.local_post_office),
-                  color: Colors.black,
-                  iconSize: 40,
-                ),
-              ],
             ),
           ),
         ],
