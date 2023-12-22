@@ -20,7 +20,6 @@ class EditProfilePage extends StatefulWidget {
       _EditProfilePageState(); // Fixed typo here
 }
 
-
 class _EditProfilePageState extends State<EditProfilePage> {
   final controller = Get.put(ProfileController());
   final email = TextEditingController();
@@ -35,6 +34,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   bool isImageSelected = false;
   File? imageFile;
   late String imageName = ""; // Declare the image name variable
+  late Image profileImage;
   late String id;
   late UserModel userData;
   bool first = false;
@@ -48,7 +48,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
         width: 100, // Defina a largura desejada
         height: 100, // Defina a altura desejada
       );
-      
     });
   }
 
@@ -79,6 +78,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
         setState(() {
           if (imageFile != null) {
+            profileImage = Image.file(imageFile!);
             isImageSelected = true;
           } else {
             isImageSelected = false;
@@ -106,8 +106,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
     super.initState();
 
     // Fetch user data
-        controller.getUserData().then((data) {
-        setState(() {
+    controller.getUserData().then((data) {
+      setState(() {
         userData = data;
         id = userData.id ?? '';
         email.text = userData?.email ?? '';
@@ -116,7 +116,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
         aboutMe.text = userData?.aboutMe ?? '';
         jobs.text = userData?.jobs?.toString() ?? '';
         imageController.text = userData?.image ?? '';
-        password.text = userData?.password ?? '';;
+        password.text = userData?.password ?? '';
+        ;
         imageName = imageController.text;
       });
     });
@@ -189,18 +190,33 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                     child: isImageSelected || imageName != ""
                                         ? ClipOval(
                                             child: imageName != "" &&
-                                                    isImageSelected == false
+                                                    isImageSelected == false &&
+                                                    !loaded
                                                 ? (FutureBuilder(
-                                                    future: _getImage(context,imageController.text),
+                                                    future: _getImage(context,
+                                                        imageController.text),
                                                     builder:
                                                         (context, snapshot) {
-                                                      if (snapshot
-                                                              .connectionState ==
-                                                          ConnectionState
-                                                              .done) {
+                                                      if ((snapshot
+                                                                  .connectionState ==
+                                                              ConnectionState
+                                                                  .done) &&
+                                                          !loaded) {
+                                                        loaded = true;
+                                                        profileImage = snapshot
+                                                            .data as Image;
                                                         return Center(
                                                             child:
                                                                 snapshot.data);
+                                                      }
+                                                      if ((snapshot
+                                                                  .connectionState ==
+                                                              ConnectionState
+                                                                  .done) &&
+                                                          loaded) {
+                                                        return Center(
+                                                            child:
+                                                                profileImage);
                                                       }
                                                       if (snapshot
                                                               .connectionState ==
@@ -215,9 +231,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                                               "Something went wrong!"));
                                                     },
                                                   ))
-                                                : imageFile != null
-                                                    ? Image.file(
-                                                        imageFile!,
+                                                : profileImage != null
+                                                    ? Image(
+                                                        image:
+                                                            profileImage.image,
                                                         fit: BoxFit.cover,
                                                         width: 100,
                                                         height: 100,

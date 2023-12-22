@@ -77,15 +77,59 @@ class _SearchPageStage extends State<SearchPage> {
                         ),
                       ),
                       Positioned(
+                        //Plumber
                         left: physicalScreenSize.width / 2 - 155,
                         top: 346,
-                        child: Container(
-                          width: 145,
-                          height: 145,
-                          decoration: ShapeDecoration(
-                            color: const Color(0xFFD9D9D9),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(25),
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.pushNamed(context, '/resultados');
+                          },
+                          child: Container(
+                            width: 145,
+                            height: 145,
+                            decoration: ShapeDecoration(
+                              color: const Color(0xFFD9D9D9),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(25),
+                              ),
+                            ),
+                            child: Stack(
+                              children: [
+                                Positioned(
+                                  left: 0,
+                                  top: 10,
+                                  child: SizedBox(
+                                    width: 145,
+                                    height: 20,
+                                    child: Text(
+                                      'Plumber',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 19,
+                                        fontFamily: 'Roboto Mono',
+                                        fontWeight: FontWeight.w500,
+                                        height: 0,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Positioned(
+                                  left: 10,
+                                  top: 50,
+                                  child: Container(
+                                    width: 123,
+                                    height: 86,
+                                    decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                        image: Image.asset('assets/plumber.png')
+                                            .image,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ),
@@ -93,41 +137,172 @@ class _SearchPageStage extends State<SearchPage> {
                       Positioned(
                         left: physicalScreenSize.width / 2 + 10,
                         top: 346,
-                        child: Container(
-                          width: 145,
-                          height: 145,
-                          decoration: ShapeDecoration(
-                            color: const Color(0xFFD9D9D9),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(25),
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.pushNamed(context, '/resultados');
+                          },
+                          child: Container(
+                            width: 145,
+                            height: 145,
+                            decoration: ShapeDecoration(
+                              color: const Color(0xFFD9D9D9),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(25),
+                              ),
                             ),
+                            child: Stack(children: [
+                              Positioned(
+                                left: 0,
+                                top: 10,
+                                child: SizedBox(
+                                  width: 145,
+                                  height: 20,
+                                  child: Text(
+                                    'Electrician',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 19,
+                                      fontFamily: 'Roboto Mono',
+                                      fontWeight: FontWeight.w500,
+                                      height: 0,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Positioned(
+                                left: 20,
+                                top: 40,
+                                child: Container(
+                                  width: 106,
+                                  height: 105,
+                                  decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                      image:
+                                          Image.asset('assets/eletricista.png')
+                                              .image,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ]),
                           ),
                         ),
                       ),
                       Positioned(
+                        //babysitter
                         left: physicalScreenSize.width / 2 - 155,
                         top: 515,
-                        child: Container(
-                          width: 145,
-                          height: 145,
-                          decoration: ShapeDecoration(
-                            color: const Color(0xFFD9D9D9),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(25),
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.pushNamed(context, '/resultados');
+                          },
+                          child: Container(
+                            width: 145,
+                            height: 145,
+                            decoration: ShapeDecoration(
+                              color: const Color(0xFFD9D9D9),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(25),
+                              ),
+                            ),
+                            child: Stack(
+                              children: [
+                                Positioned(
+                                  left: 0,
+                                  top: 10,
+                                  child: SizedBox(
+                                    width: 145,
+                                    height: 20,
+                                    child: Text(
+                                      'Babysitter',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 19,
+                                        fontFamily: 'Roboto Mono',
+                                        fontWeight: FontWeight.w500,
+                                        height: 0,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Positioned(
+                                  left: 15,
+                                  top: 40,
+                                  child: Container(
+                                    width: 111,
+                                    height: 101,
+                                    decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                        image:
+                                            Image.asset('assets/babysitter.png')
+                                                .image,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ),
                       ),
                       Positioned(
+                        //housemaid
                         left: physicalScreenSize.width / 2 + 10,
                         top: 515,
-                        child: Container(
-                          width: 145,
-                          height: 145,
-                          decoration: ShapeDecoration(
-                            color: const Color(0xFFD9D9D9),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(25),
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.pushNamed(context, '/resultados');
+                          },
+                          child: Container(
+                            width: 145,
+                            height: 145,
+                            decoration: ShapeDecoration(
+                              color: const Color(0xFFD9D9D9),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(25),
+                              ),
+                            ),
+                            child: Stack(
+                              children: [
+                                Positioned(
+                                  left: physicalScreenSize.width / 2 + 10,
+                                  top: 530,
+                                  child: SizedBox(
+                                    width: 145,
+                                    height: 20,
+                                    child: Text(
+                                      'Housemaid',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 19,
+                                        fontFamily: 'Roboto Mono',
+                                        fontWeight: FontWeight.w500,
+                                        height: 0,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Positioned(
+                                  left: physicalScreenSize.width / 2 + 28,
+                                  top: 558,
+                                  child: Container(
+                                    width: 106,
+                                    height: 110,
+                                    decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                        image: Image.asset('assets/maid.png')
+                                            .image,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ),
@@ -156,139 +331,6 @@ class _SearchPageStage extends State<SearchPage> {
                             color: const Color(0xFFD9D9D9),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(25),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        left: physicalScreenSize.width / 2 + 10,
-                        top: 356,
-                        child: SizedBox(
-                          width: 145,
-                          height: 20,
-                          child: Text(
-                            'Babysitter',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 19,
-                              fontFamily: 'Roboto Mono',
-                              fontWeight: FontWeight.w500,
-                              height: 0,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        left: physicalScreenSize.width / 2 + 25,
-                        top: 387,
-                        child: Container(
-                          width: 111,
-                          height: 101,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: Image.asset('assets/babysitter.png').image,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        left: physicalScreenSize.width / 2 - 155,
-                        top: 531,
-                        child: SizedBox(
-                          width: 145,
-                          height: 20,
-                          child: Text(
-                            'Electrician',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 19,
-                              fontFamily: 'Roboto Mono',
-                              fontWeight: FontWeight.w500,
-                              height: 0,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        left: physicalScreenSize.width / 2 - 135,
-                        top: 558,
-                        child: Container(
-                          width: 106,
-                          height: 105,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image:
-                                  Image.asset('assets/eletricista.png').image,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        left: physicalScreenSize.width / 2 + 10,
-                        top: 530,
-                        child: SizedBox(
-                          width: 145,
-                          height: 20,
-                          child: Text(
-                            'Housemaid',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 19,
-                              fontFamily: 'Roboto Mono',
-                              fontWeight: FontWeight.w500,
-                              height: 0,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        left: physicalScreenSize.width / 2 + 28,
-                        top: 558,
-                        child: Container(
-                          width: 106,
-                          height: 110,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: Image.asset('assets/maid.png').image,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        left: physicalScreenSize.width / 2 - 155,
-                        top: 360,
-                        child: SizedBox(
-                          width: 145,
-                          height: 20,
-                          child: Text(
-                            'Plumber',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 19,
-                              fontFamily: 'Roboto Mono',
-                              fontWeight: FontWeight.w500,
-                              height: 0,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        left: physicalScreenSize.width / 2 - 143,
-                        top: 404,
-                        child: Container(
-                          width: 123,
-                          height: 86,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: Image.asset('assets/plumber.png').image,
-                              fit: BoxFit.cover,
                             ),
                           ),
                         ),
