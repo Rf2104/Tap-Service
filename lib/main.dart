@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:projeto_final/add_services.dart';
+import 'package:projeto_final/all_services.dart';
 import 'package:projeto_final/homepage.dart';
 import 'package:projeto_final/messages.dart';
 import 'package:projeto_final/resultados.dart';
@@ -22,9 +24,10 @@ Future<void> main() async {
       '/editprofile': (context) => const EditProfilePage(),
       '/profile': (context) => const ProfilePage(),
       '/search': (context) => const SearchPage(),
-      '/resultados': (context) => const ResultadosPage(),
       '/messages': (context) => const MessagesPage(),
       '/homepage': (context) => const HomePage(),
+      '/addservices': (context) => const AddServicePage(),
+      '/allservices': (context) => const ShowServicesPage(),
     },
   ));
 }

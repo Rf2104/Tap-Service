@@ -114,10 +114,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
         name.text = userData?.name ?? '';
         location.text = userData?.location ?? '';
         aboutMe.text = userData?.aboutMe ?? '';
-        jobs.text = userData?.jobs?.toString() ?? '';
+        jobs.text = userData?.jobs?.map((job) => job.toString()).join(',') ?? '';
         imageController.text = userData?.image ?? '';
         password.text = userData?.password ?? '';
-        ;
         imageName = imageController.text;
       });
     });
@@ -269,7 +268,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                           .parseJobs(jobs.text.trim()),
                                       image: imageController.text.trim(),
                                     );
-
                                     await controller.updateUser(userData);
                                     await controller.updateUserImage(
                                         imageName, userData);

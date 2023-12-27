@@ -396,21 +396,7 @@ class _RegisterPageState extends State<RegisterPage> {
     String password = passwordController.text;
     String confirmPassword = confirmPasswordController.text;
     String name = nameController.text;
-
-    User? user = await _auth.signUpWithEmailAndPassword(email, password);
-
-          showDialog(
-            context: context,
-            builder: (context) => const Center(
-              child: CircularProgressIndicator(),
-          ));
-
-    if (user != null) {
-      print("User created successfully");
-      Navigator.pushNamed(context, "/profile");
-    } else {
-      print("User creation failed");
-    }
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
 
     if (password != confirmPassword) {
       // Senhas não conferem
@@ -448,8 +434,18 @@ class _RegisterPageState extends State<RegisterPage> {
         ),
       );
       return;
+    } 
+
+    User? user = await _auth.signUpWithEmailAndPassword(email, password);
+
+      if (user != null) {
+        print("User created successfully");
+        Navigator.pushNamed(context, "/homepage");
     } else {
-      final user = UserModel(
+        print("User creation failed");
+    }
+
+    final userData = UserModel(
         name: name.trim(),
         email: email.trim(),
         password: password.trim(),
@@ -458,8 +454,7 @@ class _RegisterPageState extends State<RegisterPage> {
         jobs: [],
       );
 
-      await userRepo.createUser(user);
-      Navigator.pushNamed(context, '/profile');
+      await userRepo.createUser(userData);
+      Navigator.pushNamed(context, '/homepage');
     }
   }
-}

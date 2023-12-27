@@ -3,6 +3,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:projeto_final/login.dart';
 import 'package:projeto_final/messages.dart';
 import 'package:projeto_final/profile.dart';
 import 'package:projeto_final/profileController.dart';
@@ -17,7 +18,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final user = FirebaseAuth.instance.currentUser!;
+  final user = FirebaseAuth.instance.currentUser;
   int _currentIndex = 0;
 
   final List<Widget> _pages = [
@@ -34,6 +35,10 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+        if (user == null) {
+      // Se não houver usuário autenticado, redirecione para a tela de login
+      return const LoginPage();
+    }
     return Scaffold(
         body: _pages[_currentIndex],
         bottomNavigationBar: BottomNavigationBar(

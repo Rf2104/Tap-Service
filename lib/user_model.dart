@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Job {
-  final int exp;
-  final int price;
+  final String exp;
+  final String price;
   final String jobName;
   final String jobDescription;
 
@@ -14,6 +14,20 @@ class Job {
     required this.jobName,
     required this.jobDescription,
   });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'exp': exp,
+      'price': price,
+      'jobName': jobName,
+      'jobDescription': jobDescription,
+    };
+  }
+
+  @override
+  String toString() {
+    return '$exp:$price:$jobName:$jobDescription';
+  }
 }
 
 class UserModel {
@@ -70,8 +84,8 @@ class UserModel {
       image: data?['image'] ?? '',
       jobs: (data?['jobs'] as List?)
               ?.map((job) => Job(
-                    exp: job?['exp'] ?? 0,
-                    price: job?['price'] ?? 0,
+                    exp: job?['exp'] ?? '',
+                    price: job?['price'] ?? '',
                     jobName: job?['jobName'] ?? '',
                     jobDescription: job?['jobDescription'] ?? '',
                   ))

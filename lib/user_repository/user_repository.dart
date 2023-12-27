@@ -39,13 +39,6 @@ class UserRepository {
     return userData;
   }
 
-  Future<List<UserModel>> allUser(String email) async {
-    final snapshot = await _db.collection('users').get();
-    final userData =
-        snapshot.docs.map((e) => UserModel.fromSnapshot(e)).toList();
-    return userData;
-  }
-
   Future<void> updateUser(UserModel user) async {
     final userDoc = _db.collection('users').doc(user.id);
 
@@ -99,6 +92,21 @@ class UserRepository {
     } else {
       // Handle the case when there is no user data
       return null; // Or any other appropriate value
+    }
+  }
+
+  Future<void> updateUserJobs(List<Job> jobs, UserModel user) async {
+    final userDoc = _db.collection('users').doc(user.id);
+
+    // Check if the document exists
+    final userDocSnapshot = await userDoc.get();
+    if (userDocSnapshot.exists) {
+      // Document exists, proceed with the update
+      await userDoc.update({'jobs': jobs.map((e) => e.toJson()).toList()});
+    } else {
+      // Document does not exist, handle the error or perform any necessary action
+      print("Document not found: ${user.id}");
+      // You might want to throw an exception or show a message to the user
     }
   }
 }

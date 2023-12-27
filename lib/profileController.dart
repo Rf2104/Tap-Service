@@ -11,35 +11,40 @@ class ProfileController extends GetxController {
   final _userRepo = Get.put(UserRepository());
 
   List<Job> parseJobs(String jobsText) {
-    List<Job> jobs = [];
+  List<Job> jobs = [];
 
-    if (jobsText.isNotEmpty) {
-      List<String> jobList = jobsText.split(',');
+  if (jobsText.isNotEmpty) {
+    List<String> jobList = jobsText.split(',').map((job) => job.trim()).toList();
 
-      for (String jobString in jobList) {
-        List<String> jobDetails = jobString.split(':');
+    for (String jobString in jobList) {
+      List<String> jobDetails = jobString.split(':');
 
-        if (jobDetails.length == 4) {
-          int exp = int.tryParse(jobDetails[0]) ?? 0;
-          int price = int.tryParse(jobDetails[1]) ?? 0;
-          String jobName = jobDetails[2];
-          String jobDescription = jobDetails[3];
+      if (jobDetails.length == 4) {
+        String exp = jobDetails[0].trim();
+        String price = jobDetails[1].trim();
+        String jobName = jobDetails[2].trim();
+        String jobDescription = jobDetails[3].trim();
 
-          Job job = Job(
-              exp: exp,
-              price: price,
-              jobName: jobName,
-              jobDescription: jobDescription);
-          jobs.add(job);
-        } else {
-          // Handle invalid job string
-          print('Invalid job string: $jobString');
-        }
+        print('Parsed Job Details: exp=$exp, price=$price, jobName=$jobName, jobDescription=$jobDescription');
+
+
+        Job job = Job(
+          exp: exp,
+          price: price,
+          jobName: jobName,
+          jobDescription: jobDescription,
+        );
+        jobs.add(job);
+      } else {
+        // Handle invalid job string
+        print('Invalid job string: $jobString');
       }
     }
-
-    return jobs;
   }
+
+  return jobs;
+}
+
 
   getUserID(){
     final id = FirebaseAuth.instance.currentUser!.uid;
@@ -66,6 +71,10 @@ class ProfileController extends GetxController {
 
   updateUserImage(String image, UserModel user) async {
     await _userRepo.updateUserImage(image, user);
+  }
+
+  updateUserJobs(List<Job> jobs, UserModel user) async {
+    await _userRepo.updateUserJobs(jobs, user);
   }
 
   getUserImage(UserModel user) {

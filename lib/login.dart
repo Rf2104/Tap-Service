@@ -18,6 +18,8 @@ class _LoginPageStage extends State<LoginPage> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
+  bool _isSigningIn = false;
+
   @override
   void dispose() {
     // Limpa os controladores quando o widget é removido da árvore de widgets
@@ -202,7 +204,7 @@ class _LoginPageStage extends State<LoginPage> {
                         borderRadius: BorderRadius.circular(30),
                       ),
                     ),
-                    child: const Text(
+                    child: Text(
                       'Login',
                       style: TextStyle(
                         color: Colors.white,
@@ -283,28 +285,6 @@ class _LoginPageStage extends State<LoginPage> {
           backgroundColor: Colors.red,
         ),
       );
-    }
-
-    if (email.isEmpty || password.isEmpty) {
-      // Exibe um diálogo de alerta
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: const Text('Erro'),
-            content: const Text('Email e senha são obrigatórios.'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text('OK'),
-              ),
-            ],
-          );
-        },
-      );
-      return;
     }
   }
 }

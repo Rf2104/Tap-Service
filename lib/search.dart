@@ -1,5 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:projeto_final/homepage.dart';
+import 'package:projeto_final/resultados.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({Key? key});
@@ -84,7 +87,13 @@ class _SearchPageState extends State<SearchPage> {
                         top: 346,
                         child: GestureDetector(
                           onTap: () {
-                            Navigator.pushNamed(context, '/resultados');
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    ResultadosPage(jobName: "Plumber"),
+                              ),
+                            );
                           },
                           child: Container(
                             width: 145,
@@ -141,7 +150,13 @@ class _SearchPageState extends State<SearchPage> {
                         top: 346,
                         child: GestureDetector(
                           onTap: () {
-                            Navigator.pushNamed(context, '/resultados');
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    ResultadosPage(jobName: "Electrician"),
+                              ),
+                            );
                           },
                           child: Container(
                             width: 145,
@@ -198,7 +213,13 @@ class _SearchPageState extends State<SearchPage> {
                         top: 515,
                         child: GestureDetector(
                           onTap: () {
-                            Navigator.pushNamed(context, '/resultados');
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    ResultadosPage(jobName: "Babysitter"),
+                              ),
+                            );
                           },
                           child: Container(
                             width: 145,
@@ -257,7 +278,13 @@ class _SearchPageState extends State<SearchPage> {
                         top: 515,
                         child: GestureDetector(
                           onTap: () {
-                            Navigator.pushNamed(context, '/resultados');
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    ResultadosPage(jobName: "Housemaid"),
+                              ),
+                            );
                           },
                           child: Container(
                             width: 145,
@@ -313,20 +340,87 @@ class _SearchPageState extends State<SearchPage> {
                         left: physicalScreenSize.width / 2 - 155,
                         top: 685,
                         child: GestureDetector(
-                          onTap: () {
-                            Navigator.pushNamed(context, '/resultados');
-                          },
-                        child: Container(
-                            width: 145,
-                            height: 145,
-                            decoration: ShapeDecoration(
-                              color: const Color(0xFFD9D9D9),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(25),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      ResultadosPage(jobName: "Painter"),
+                                ),
+                              );
+                            },
+                            child: Container(
+                                width: 145,
+                                height: 145,
+                                decoration: ShapeDecoration(
+                                  color: const Color(0xFFD9D9D9),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(25),
+                                  ),
+                                ),
+                                child: Stack(
+                                  children: [
+                                    Positioned(
+                                      left: 0,
+                                      top: 10,
+                                      child: SizedBox(
+                                        width: 145,
+                                        height: 20,
+                                        child: Text(
+                                          'Painter',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 19,
+                                            fontFamily: 'Roboto Mono',
+                                            fontWeight: FontWeight.w500,
+                                            height: 0,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Positioned(
+                                      left: 18,
+                                      top: 37,
+                                      child: Container(
+                                        width: 106,
+                                        height: 110,
+                                        decoration: BoxDecoration(
+                                          image: DecorationImage(
+                                            image:
+                                                Image.asset('assets/pintor.png')
+                                                    .image,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ))),
+                      ),
+                      Positioned(
+                          left: physicalScreenSize.width / 2 + 10,
+                          top: 685,
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      ResultadosPage(jobName: "Gardener"),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              width: 145,
+                              height: 145,
+                              decoration: ShapeDecoration(
+                                color: const Color(0xFFD9D9D9),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(25),
+                                ),
                               ),
-                            ),
-                            child: Stack(
-                              children: [
+                              child: Stack(children: [
                                 Positioned(
                                   left: 0,
                                   top: 10,
@@ -334,7 +428,7 @@ class _SearchPageState extends State<SearchPage> {
                                     width: 145,
                                     height: 20,
                                     child: Text(
-                                      'Painter',
+                                      'Gardener',
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                         color: Colors.black,
@@ -347,77 +441,24 @@ class _SearchPageState extends State<SearchPage> {
                                   ),
                                 ),
                                 Positioned(
-                                  left: 18,
-                                  top: 37,
+                                  left: 10,
+                                  top: 45,
                                   child: Container(
-                                    width: 106,
-                                    height: 110,
+                                    width: 123,
+                                    height: 95,
                                     decoration: BoxDecoration(
                                       image: DecorationImage(
-                                        image: Image.asset('assets/pintor.png')
-                                            .image,
+                                        image:
+                                            Image.asset('assets/jardineiro.png')
+                                                .image,
                                         fit: BoxFit.cover,
                                       ),
                                     ),
                                   ),
                                 ),
-                              ],
-                            ))),
-                      ),
-                      Positioned(
-                        left: physicalScreenSize.width / 2 + 10,
-                        top: 685,
-                        child: GestureDetector(
-                          onTap: () {
-                            Navigator.pushNamed(context, '/resultados');
-                          },
-                        child: Container(
-                          width: 145,
-                          height: 145,
-                          decoration: ShapeDecoration(
-                            color: const Color(0xFFD9D9D9),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(25),
+                              ]),
                             ),
-                          ),
-                          child: Stack(children: [
-                            Positioned(
-                              left: 0,
-                              top: 10,
-                              child: SizedBox(
-                                width: 145,
-                                height: 20,
-                                child: Text(
-                                  'Gardener',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 19,
-                                    fontFamily: 'Roboto Mono',
-                                    fontWeight: FontWeight.w500,
-                                    height: 0,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Positioned(
-                              left: 10,
-                              top: 45,
-                              child: Container(
-                                width: 123,
-                                height: 95,
-                                decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                    image: Image.asset('assets/jardineiro.png')
-                                        .image,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ]),
-                        ),
-                      )),
+                          )),
                     ],
                   ),
                 ),
