@@ -3,18 +3,20 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-import 'package:projeto_final/messages.dart';
-import 'package:projeto_final/homepage.dart';
-import 'package:projeto_final/profileController.dart';
-import 'package:projeto_final/search.dart';
-import 'package:projeto_final/servicedetails.dart';
-import 'package:projeto_final/user_model.dart';
+import 'package:projeto_final/controllers/profileController.dart';
+import 'package:projeto_final/pages/all_services.dart';
+import 'package:projeto_final/controllers/searchProfileController.dart';
+import 'package:projeto_final/pages/homepage.dart';
+import 'package:projeto_final/pages/messages_page.dart';
+import 'package:projeto_final/pages/servicedetails.dart';
+import 'package:projeto_final/pages/user_model.dart';
 
-class ProfilePage extends StatefulWidget {
-  const ProfilePage({Key? key});
+class SearchProfilePage extends StatefulWidget {
+  final String userId;
+  const SearchProfilePage({Key? key, required this.userId});
 
   @override
-  State<ProfilePage> createState() => _ProfilePageState();
+  State<SearchProfilePage> createState() => _SearchProfilePageState();
 }
 
 final Map<String, String> jobImages = {
@@ -26,17 +28,20 @@ final Map<String, String> jobImages = {
   'Housemaid': 'assets/maid.png',
 };
 
-class _ProfilePageState extends State<ProfilePage> {
-  final controller = Get.put(ProfileController());
-  final email = TextEditingController();
-  final name = TextEditingController();
-  final location = TextEditingController();
-  final aboutMe = TextEditingController();
-  final jobs = TextEditingController();
-  final imageController = TextEditingController();
-  final password = TextEditingController();
-
-  final user = FirebaseAuth.instance.currentUser!;
+class _SearchProfilePageState extends State<SearchProfilePage> {
+  final controller = Get.put(SearchProfileController());
+  final controllerCurrentUser = ProfileController();
+  late String id;
+  late String email;
+  late String name;
+  late String location;
+  late String aboutMe;
+  late String jobs;
+  late String image;
+  late String password;
+  late String dms;
+  late UserModel userData;
+  final currentUser = FirebaseAuth.instance.currentUser!;
 
   Future<Widget> _getImage(BuildContext context, String imageName) async {
     return FirebaseStorageService.loadImage(context, imageName).then((value) {
@@ -49,24 +54,25 @@ class _ProfilePageState extends State<ProfilePage> {
     });
   }
 
-  Future<void> _navigateToEditProfile(BuildContext context) async {
-    // Display CircularProgressIndicator
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return Center(
-          child: CircularProgressIndicator(),
-        );
-      },
-    );
+  @override
+  void initState() {
+    super.initState();
 
-    // Simulate some processing time
-    await Future.delayed(Duration(seconds: 2));
-
-    // Navigate to the edit profile page
-    Navigator.pop(context); // Close the CircularProgressIndicator
-    Navigator.pushNamed(context, '/editprofile');
+    // Fetch user data
+    controllerCurrentUser.getUserData().then((data) {
+      setState(() {
+        userData = data;
+        id = userData.id ?? '';
+        email = userData?.email ?? '';
+        name = userData?.name ?? '';
+        location = userData?.location ?? '';
+        aboutMe = userData?.aboutMe ?? '';
+        jobs = userData?.jobs?.map((job) => job.toString()).join(',') ?? '';
+        image = userData?.image ?? '';
+        password = userData?.password ?? '';
+        dms = userData?.dms?.map((dm) => dm.toString()).join(',') ?? '';
+      });
+    });
   }
 
   @override
@@ -90,7 +96,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       clipBehavior: Clip.antiAlias,
                       decoration: BoxDecoration(color: Color(0xFFF9E0CE)),
                       child: FutureBuilder(
-                          future: controller.getUserData(),
+                          future: controller.fetchUserData(widget.userId),
                           builder: (context, snapshot) {
                             if (snapshot.connectionState ==
                                 ConnectionState.done) {
@@ -176,7 +182,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                                 width: 281.38,
                                                 height: 161,
                                                 child: Text(
-                                                  controller.getAboutMe(user),
+                                                  user.aboutMe,
                                                   style: TextStyle(
                                                     color: Colors.black,
                                                     fontSize: 15,
@@ -254,93 +260,42 @@ class _ProfilePageState extends State<ProfilePage> {
                                       ),
                                     ),
                                     Positioned(
-                                        left: 25,
-                                        top: 116,
-                                        child: Container(
-                                            width: 100,
-                                            height: 100,
-                                            decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              color: Color(0xFFF9E0CE),
-                                              border: Border.all(
-                                                color: Colors
-                                                    .black, // Set your desired border color here
-                                                width:
-                                                    2.0, // Set your desired border width here
-                                              ),
-                                            ),
-                                            child: ClipOval(
-                                                child: FutureBuilder(
-                                              future: _getImage(
-                                                  context, user.image!),
-                                              builder: (context, snapshot) {
-                                                if (snapshot.connectionState ==
-                                                    ConnectionState.done) {
-                                                  return Center(
-                                                      child: snapshot.data);
-                                                }
-                                                if (snapshot.connectionState ==
-                                                    ConnectionState.waiting) {
-                                                  return const Center(
-                                                      child:
-                                                          CircularProgressIndicator());
-                                                }
-                                                return const Center(
-                                                    child: Text(
-                                                        "Something went wrong!"));
-                                              },
-                                            )))),
-                                    Positioned(
-                                      left: 224,
-                                      top: 113,
+                                      left: 25,
+                                      top: 116,
                                       child: Container(
-                                        width: 109,
-                                        height: 39,
-                                        child: Stack(
-                                          children: [
-                                            Positioned(
-                                              left: 0,
-                                              top: 0,
-                                              child: Container(
-                                                width: 109,
-                                                height: 39,
-                                                decoration: ShapeDecoration(
-                                                  shape: RoundedRectangleBorder(
-                                                    side: BorderSide(width: 2),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            15),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            Positioned(
-                                              left: 0,
-                                              top: 9,
-                                              child: GestureDetector(
-                                                onTap: () {
-                                                  Navigator.pushNamed(
-                                                      context, '/editprofile');
-                                                },
-                                                child: const SizedBox(
-                                                  width: 109,
-                                                  height: 39,
+                                        width: 100,
+                                        height: 100,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Color(0xFFF9E0CE),
+                                          border: Border.all(
+                                            color: Colors
+                                                .black, // Set your desired border color here
+                                            width:
+                                                2.0, // Set your desired border width here
+                                          ),
+                                        ),
+                                        child: ClipOval(
+                                          child: FutureBuilder(
+                                            future:
+                                                _getImage(context, user.image!),
+                                            builder: (context, snapshot) {
+                                              if (snapshot.connectionState ==
+                                                  ConnectionState.done) {
+                                                return Center(
+                                                    child: snapshot.data);
+                                              }
+                                              if (snapshot.connectionState ==
+                                                  ConnectionState.waiting) {
+                                                return const Center(
+                                                    child:
+                                                        CircularProgressIndicator());
+                                              }
+                                              return const Center(
                                                   child: Text(
-                                                    'Edit profile',
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 18,
-                                                      fontFamily: 'Roboto',
-                                                      fontWeight:
-                                                          FontWeight.w700,
-                                                      height: 0,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
+                                                      "Something went wrong!"));
+                                            },
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -353,35 +308,40 @@ class _ProfilePageState extends State<ProfilePage> {
                                         height: 50,
                                         child: IconButton(
                                           onPressed: () {
-                                            FirebaseAuth.instance.signOut();
-                                            Navigator.pushNamed(
-                                                context, '/login');
+                                            Navigator.pop(context);
                                           },
-                                          icon: Icon(Icons.logout),
+                                          icon: Icon(Icons.arrow_back_ios),
                                           color: Colors.black,
                                           iconSize: 35,
                                         ),
                                       ),
                                     ),
-                                    _showServices(user, physicalScreenSize),
                                     Positioned(
-                                      left: 120,
-                                      top: 439,
-                                      child: SizedBox(
-                                        width: 40,
-                                        height: 40,
+                                      left: 270,
+                                      top: 132,
+                                      child: Container(
+                                        width: 50,
+                                        height: 50,
                                         child: IconButton(
                                           onPressed: () {
-                                            print("Add services");
-                                            Navigator.pushNamed(
-                                                context, '/addservices');
+                                            controllerCurrentUser.updateDms(
+                                                widget.userId, userData);
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    HomePage(initialIndex: 2),
+                                              ),
+                                            );
                                           },
-                                          icon: Icon(Icons.add_box),
+                                          icon: Icon(Icons.mail),
                                           color: Colors.black,
-                                          iconSize: 20,
+                                          iconSize: 30,
                                         ),
                                       ),
                                     ),
+                                    _showServices(user, physicalScreenSize,
+                                        widget.userId),
                                     Positioned(
                                       right: 25,
                                       top: 440,
@@ -390,9 +350,16 @@ class _ProfilePageState extends State<ProfilePage> {
                                         height: 40,
                                         child: IconButton(
                                           onPressed: () {
-                                            Navigator.pushNamed(
-                                                context, '/allservices');
-                                            print("All Services");
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ShowServicesPage(
+                                                  userId: widget.userId,
+                                                  currentUserId: '',
+                                                ),
+                                              ),
+                                            );
                                           },
                                           icon: Icon(Icons.more_horiz_rounded),
                                           color: Colors.black,
@@ -406,6 +373,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 return Center(
                                     child: Text(snapshot.error.toString()));
                               } else {
+                                print('No data found');
                                 return const Center(
                                     child: Text("Something went wrong!"));
                               }
@@ -426,7 +394,8 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 }
 
-Widget _showServices(UserModel userData, Size physicalScreenSize) {
+Widget _showServices(
+    UserModel userData, Size physicalScreenSize, String userId) {
   return userData.jobs.isEmpty
       ? Positioned(
           left: physicalScreenSize.width / 2 - 150,
@@ -472,21 +441,23 @@ Widget _showServices(UserModel userData, Size physicalScreenSize) {
               itemBuilder: (context, index) {
                 Job job = userData.jobs[index];
                 return _buildJobWidget(
-                    job, context, index, userData.jobs.length);
+                    job, context, index, userData.jobs.length, userId);
               },
             ),
           ),
         );
 }
 
-Widget _buildJobWidget(Job job, BuildContext context, int index, int jobs) {
+Widget _buildJobWidget(
+    Job job, BuildContext context, int index, int jobs, String userId) {
   String imagePath = jobImages[job.jobName] ?? 'default_image.png';
   return GestureDetector(
     onTap: () {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => ServiceDetailsPage(jobindex: index),
+          builder: (context) =>
+              ServiceDetailsPage(jobindex: index, userId: userId),
         ),
       );
     },

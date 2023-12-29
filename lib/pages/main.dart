@@ -1,23 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:projeto_final/add_services.dart';
-import 'package:projeto_final/all_services.dart';
-import 'package:projeto_final/homepage.dart';
-import 'package:projeto_final/messages.dart';
-import 'package:projeto_final/resultados.dart';
-import 'package:projeto_final/search.dart';
+import 'package:projeto_final/firebase/firebase_options.dart';
+import 'package:projeto_final/pages/chat_page.dart';
+import 'add_services.dart';
+import 'all_services.dart';
+import 'homepage.dart';
+import 'messages_page.dart';
+import 'search.dart';
 import 'login.dart';
 import 'register.dart';
 import 'editprofile.dart';
 import 'profile.dart';
-import 'resultados.dart';
+import 'search_profile.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
-
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(MaterialApp(
-    home: const HomePage(),
+    home: const HomePage(initialIndex: 0,),
     routes: {
       '/login': (context) => const LoginPage(),
       '/register': (context) => const RegisterPage(),
@@ -25,9 +24,14 @@ Future<void> main() async {
       '/profile': (context) => const ProfilePage(),
       '/search': (context) => const SearchPage(),
       '/messages': (context) => const MessagesPage(),
-      '/homepage': (context) => const HomePage(),
+      '/homepage': (context) => const HomePage(initialIndex: 0,),
       '/addservices': (context) => const AddServicePage(),
-      '/allservices': (context) => const ShowServicesPage(),
+      '/allservices': (context) => const ShowServicesPage(
+            userId: '', currentUserId: '',
+          ),
+      '/searchprofile': (context) => const SearchProfilePage(
+            userId: '',
+          ),
     },
   ));
 }

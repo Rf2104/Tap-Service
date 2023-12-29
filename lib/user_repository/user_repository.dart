@@ -1,12 +1,7 @@
-// ignore_for_file: body_might_complete_normally_catch_error
-
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:projeto_final/user_model.dart';
+import 'package:projeto_final/pages/user_model.dart';
 
 class UserRepository {
   static UserRepository get instance => Get.find();
@@ -106,6 +101,40 @@ class UserRepository {
     } else {
       // Document does not exist, handle the error or perform any necessary action
       print("Document not found: ${user.id}");
+      // You might want to throw an exception or show a message to the user
+    }
+  }
+
+  deleteJob(Job job, UserModel user) {
+    final userDoc = _db.collection('users').doc(user.id);
+
+    // Check if the document exists
+    final userDocSnapshot = userDoc.get();
+    if (userDocSnapshot != null) {
+      // Document exists, proceed with the update
+      userDoc.update({
+        'jobs': FieldValue.arrayRemove([job.toJson()])
+      });
+    } else {
+      // Document does not exist, handle the error or perform any necessary action
+      print("Document not found: ${user.id}");
+      // You might want to throw an exception or show a message to the user
+    }
+  }
+
+  updateDms(String dm, UserModel user) {
+    final userDoc = _db.collection('users').doc(user.id);
+
+    // Check if the document exists
+    final userDocSnapshot = userDoc.get();
+    if (userDocSnapshot != null) {
+      // Document exists, proceed with the update
+      userDoc.update({
+        'dms': FieldValue.arrayUnion([dm])
+      });
+    } else {
+      // Document does not exist, handle the error or perform any necessary action
+      print("Document not found: ${dm}");
       // You might want to throw an exception or show a message to the user
     }
   }

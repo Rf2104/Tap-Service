@@ -1,48 +1,41 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:projeto_final/DatabaseManager.dart';
-import 'package:projeto_final/profileController.dart';
-import 'package:projeto_final/user_model.dart';
+import 'package:projeto_final/pages/search_profile.dart';
 
 class ResultadosPage extends StatefulWidget {
   final String jobName;
-  const ResultadosPage({Key? key, required this.jobName});
+  final String currentUserId;
+  const ResultadosPage({Key? key,required this.currentUserId, required this.jobName});
 
   @override
   State<ResultadosPage> createState() => _ResultadosPageState();
 }
 
 class _ResultadosPageState extends State<ResultadosPage> {
-  final user = FirebaseAuth.instance.currentUser!;
-
+  final currentuser = FirebaseAuth.instance.currentUser!;
   List userList = [];
-  List filteredUserList = [];
 
   Future<List> fetchDatabaseList() async {
     try {
       final result = await FirebaseFirestore.instance.collection('users').get();
-
       if (result.docs.isNotEmpty) {
         for (var doc in result.docs) {
           // Access the 'jobs' array
           List<dynamic> jobsList = doc['jobs'];
-
           if (jobsList.isNotEmpty) {
             // Access each job inside the array
             for (var job in jobsList) {
               // Access fields inside each job
-              dynamic exp = job['exp'];
-              dynamic jobDescription = job['jobDescription'];
               dynamic jobName = job['jobName'];
-              dynamic price = job['price'];
 
               if (jobName == widget.jobName) {
-                userList.add(doc.data());
+                userList.add({
+                  'userId': doc.id, // Access the user ID using doc.id
+                  'userData': doc.data(),
+                });
+                break;
               }
             }
           } else {
@@ -58,18 +51,24 @@ class _ResultadosPageState extends State<ResultadosPage> {
     return userList;
   }
 
+  Future<Widget> _getImage(BuildContext context, String imageName) async {
+    return FirebaseStorageService.loadImage(context, imageName).then((value) {
+      return Image.network(
+        value.toString(),
+        fit: BoxFit.cover,
+        width: 100, // Defina a largura desejada
+        height: 100, // Defina a altura desejada
+      );
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final physicalScreenSize = MediaQuery.of(context).size;
 
     return Scaffold(
-        body: Center(
-      child: SingleChildScrollView(
-          child: GestureDetector(
-              onTap: () {
-                print("Back button clicked");
-                Navigator.pushNamed(context, '/homepage');
-              },
+      body: Center(
+          child: SingleChildScrollView(
               child: Container(
                   width: physicalScreenSize.width,
                   height: physicalScreenSize.height,
@@ -95,7 +94,6 @@ class _ResultadosPageState extends State<ResultadosPage> {
                               height: 40,
                               child: IconButton(
                                 onPressed: () {
-                                  print("Back button clicked");
                                   Navigator.pop(context);
                                 },
                                 icon: Icon(Icons.arrow_back_ios_new_rounded),
@@ -126,18 +124,27 @@ class _ResultadosPageState extends State<ResultadosPage> {
                           Padding(
                               padding: EdgeInsets.only(top: 300, bottom: 20),
                               child: ListView.builder(
-                                itemCount: userList.length,
+                                itemCount: userList?.length ?? 0,
                                 itemBuilder: (context, index) {
-                                  final user = userList[index];
+                                  final user = userList?[index];
+
+                                  if (user == null) {
+                                    return const SizedBox
+                                        .shrink(); // Return an empty widget if userItem is null
+                                  }
                                   int jobIndex = -1;
+                                  final userData = user['userData'];
+                                  final userId = user['userId'];
                                   // Find the index of the job with the specified jobName
-                                  for (int i = 0;
-                                      i < user['jobs'].length;
-                                      i++) {
-                                    if (user['jobs'][i]['jobName'] ==
-                                        widget.jobName) {
-                                      jobIndex = i;
-                                      break;
+                                  if (userData['jobs'] != null) {
+                                    for (int i = 0;
+                                        i < userData['jobs'].length;
+                                        i++) {
+                                      if (userData['jobs'][i]['jobName'] ==
+                                          widget.jobName) {
+                                        jobIndex = i;
+                                        break;
+                                      }
                                     }
                                   }
                                   return ListTile(
@@ -176,17 +183,38 @@ class _ResultadosPageState extends State<ResultadosPage> {
                                                     width: 130,
                                                     height: 150,
                                                     decoration: ShapeDecoration(
-                                                      image: DecorationImage(
-                                                        image: NetworkImage(
-                                                            "https://via.placeholder.com/130x150"),
-                                                        fit: BoxFit.fill,
-                                                      ),
                                                       shape:
                                                           RoundedRectangleBorder(
                                                         borderRadius:
                                                             BorderRadius
                                                                 .circular(25),
                                                       ),
+                                                    ),
+                                                    child: FutureBuilder(
+                                                      future: _getImage(context,
+                                                          userData['image']),
+                                                      builder:
+                                                          (context, snapshot) {
+                                                        if (snapshot
+                                                                .connectionState ==
+                                                            ConnectionState
+                                                                .done) {
+                                                          return Center(
+                                                              child: snapshot
+                                                                  .data);
+                                                        }
+                                                        if (snapshot
+                                                                .connectionState ==
+                                                            ConnectionState
+                                                                .waiting) {
+                                                          return const Center(
+                                                              child:
+                                                                  CircularProgressIndicator());
+                                                        }
+                                                        return const Center(
+                                                            child: Text(
+                                                                "Something went wrong!"));
+                                                      },
                                                     ),
                                                   ),
                                                 ),
@@ -197,7 +225,7 @@ class _ResultadosPageState extends State<ResultadosPage> {
                                                     width: 168,
                                                     height: 25,
                                                     child: Text(
-                                                      user['name'],
+                                                      userData['name'],
                                                       style: TextStyle(
                                                         color: Colors.black,
                                                         fontSize: 21,
@@ -216,7 +244,7 @@ class _ResultadosPageState extends State<ResultadosPage> {
                                                     width: 149,
                                                     height: 88,
                                                     child: Text(
-                                                      ('Price: ${user['jobs'][jobIndex]['price']}€/hour'),
+                                                      ('Price: ${userData['jobs'][jobIndex]['price']}€/hour'),
                                                       style: TextStyle(
                                                         color: Colors.black,
                                                         fontSize: 16,
@@ -235,7 +263,7 @@ class _ResultadosPageState extends State<ResultadosPage> {
                                                     width: 155,
                                                     height: 88,
                                                     child: Text(
-                                                      ('Experience: ${user['jobs'][jobIndex]['exp']} years'),
+                                                      ('Experience: ${userData['jobs'][jobIndex]['exp']} years'),
                                                       style: TextStyle(
                                                         color: Colors.black,
                                                         fontSize: 16,
@@ -257,7 +285,19 @@ class _ResultadosPageState extends State<ResultadosPage> {
                                                         icon: Icon(Icons
                                                             .arrow_forward_rounded),
                                                         onPressed: () {
-                                                          print('Pressed');
+                                                          if(userId != widget.currentUserId){
+                                                          Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  SearchProfilePage(
+                                                                userId: userId,
+                                                              ),
+                                                            ),
+                                                          );
+                                                        }else{
+                                                          Navigator.pushNamed(context, '/homepage');
+                                                        }
                                                         }),
                                                   ),
                                                 ),
@@ -272,6 +312,14 @@ class _ResultadosPageState extends State<ResultadosPage> {
                       }
                     },
                   )))),
-    ));
+    );
+  }
+}
+
+class FirebaseStorageService extends ChangeNotifier {
+  FirebaseStorageService();
+
+  static Future<dynamic> loadImage(BuildContext context, String image) async {
+    return await FirebaseStorage.instance.ref().child(image).getDownloadURL();
   }
 }

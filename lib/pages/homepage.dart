@@ -1,23 +1,21 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:projeto_final/login.dart';
-import 'package:projeto_final/messages.dart';
-import 'package:projeto_final/profile.dart';
-import 'package:projeto_final/profileController.dart';
-import 'package:projeto_final/search.dart';
-import 'package:projeto_final/user_model.dart';
+import 'package:projeto_final/pages/login.dart';
+import 'package:projeto_final/pages/messages_page.dart';
+import 'package:projeto_final/pages/profile.dart';
+import 'package:projeto_final/pages/search.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key});
+  final int initialIndex;
+  const HomePage({Key? key, required this.initialIndex}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
+  final GlobalKey<_HomePageState> homePageKey = GlobalKey<_HomePageState>();
+
   final user = FirebaseAuth.instance.currentUser;
   int _currentIndex = 0;
 
@@ -27,23 +25,29 @@ class _HomePageState extends State<HomePage> {
     MessagesPage(),
   ];
 
-  void _navigateBottomBar(int index) {
+  _navigateBottomBar(int index) {
     setState(() {
       _currentIndex = index;
     });
   }
 
+  void initState() {
+    super.initState();
+    _currentIndex = widget.initialIndex;
+  }
+
   @override
   Widget build(BuildContext context) {
-        if (user == null) {
+
+    if (user == null) {
       // Se não houver usuário autenticado, redirecione para a tela de login
       return const LoginPage();
     }
     return Scaffold(
         body: _pages[_currentIndex],
         bottomNavigationBar: BottomNavigationBar(
-          currentIndex: _currentIndex,
           onTap: _navigateBottomBar,
+          currentIndex: _currentIndex,
           type: BottomNavigationBarType.fixed,
           showSelectedLabels: false,
           showUnselectedLabels: false,
@@ -69,11 +73,5 @@ class _HomePageState extends State<HomePage> {
             ),
           ],
         ));
-  }
-
-  void _handleNavBarItemTap(int index) {
-    setState(() {
-      _currentIndex = index;
-    });
   }
 }

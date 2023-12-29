@@ -24,6 +24,15 @@ class Job {
     };
   }
 
+  factory Job.fromMap(Map<String, dynamic> map) {
+    return Job(
+      jobName: map['jobName'] ?? '',
+      jobDescription: map['jobDescription'] ?? '',
+      exp: map['exp'] ?? '',
+      price: map['price'] ?? '',
+    );
+  }
+
   @override
   String toString() {
     return '$exp:$price:$jobName:$jobDescription';
@@ -39,6 +48,7 @@ class UserModel {
   final String aboutMe;
   final List<Job> jobs; // Include the Job property
   final String? image;
+  final List<String>? dms;
 
   const UserModel({
     this.id,
@@ -49,6 +59,7 @@ class UserModel {
     required this.aboutMe,
     required this.jobs,
     this.image,
+    this.dms,
   });
 
   toJson() {
@@ -67,6 +78,7 @@ class UserModel {
                 'jobDescription': job.jobDescription,
               })
           .toList(),
+      'dms': dms,
     };
   }
 
@@ -83,6 +95,27 @@ class UserModel {
       aboutMe: data?['aboutMe'] ?? '',
       image: data?['image'] ?? '',
       jobs: (data?['jobs'] as List?)
+              ?.map((job) => Job(
+                    exp: job?['exp'] ?? '',
+                    price: job?['price'] ?? '',
+                    jobName: job?['jobName'] ?? '',
+                    jobDescription: job?['jobDescription'] ?? '',
+                  ))
+              .toList() ??
+          [],
+      dms: (data?['dms'] as List?)?.map((dm) => dm as String).toList() ?? [],
+    );
+  }
+
+  // Factory method to create a UserModel instance from a map
+  factory UserModel.fromMap(Map<String, dynamic> map) {
+    return UserModel(
+      name: map['name'] ?? '',
+      email: map['email'] ?? '',
+      password: map['password'] ?? '',
+      location: map['location'] ?? '',
+      aboutMe: map['aboutMe'] ?? '',
+      jobs: (map['jobs'] as List?)
               ?.map((job) => Job(
                     exp: job?['exp'] ?? '',
                     price: job?['price'] ?? '',

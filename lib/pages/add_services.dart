@@ -1,17 +1,8 @@
-import 'dart:io';
-
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
-import 'package:projeto_final/profileController.dart';
-import 'package:projeto_final/user_model.dart';
-import 'package:hovering/hovering.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:projeto_final/controllers/profileController.dart';
+import 'package:projeto_final/pages/user_model.dart';
 
 class AddServicePage extends StatefulWidget {
   const AddServicePage({Key? key});

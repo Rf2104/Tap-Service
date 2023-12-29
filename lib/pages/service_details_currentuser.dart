@@ -1,30 +1,27 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:projeto_final/profileController.dart';
-import 'package:projeto_final/user_model.dart';
+import 'package:projeto_final/controllers/profileController.dart';
+import 'package:projeto_final/pages/user_model.dart';
 
-class ServiceDetailsPage extends StatefulWidget {
+class ServiceDetailsCurrentUserPage extends StatefulWidget {
   final int jobindex;
-
-  const ServiceDetailsPage({Key? key, required this.jobindex});
+  const ServiceDetailsCurrentUserPage(
+      {Key? key, required this.jobindex});
 
   @override
-  State<ServiceDetailsPage> createState() => _ServiceDetailsPageState();
+  State<ServiceDetailsCurrentUserPage> createState() => _ServiceDetailsCurrentUserPageState();
 }
 
-class _ServiceDetailsPageState extends State<ServiceDetailsPage> {
-  final user = FirebaseAuth.instance.currentUser!;
+class _ServiceDetailsCurrentUserPageState extends State<ServiceDetailsCurrentUserPage> {
   final controller = ProfileController();
 
   final Map<String, String> jobImages = {
     'Plumber': 'assets/plumber.png',
     'Electrician': 'assets/eletricista.png',
     'Gardener': 'assets/jardineiro.png',
-    'Painter' : 'assets/pintor.png',
-    'BabySitter' : 'assets/babysitter.png',
-    'Housemaid' : 'assets/maid.png',
+    'Painter': 'assets/pintor.png',
+    'BabySitter': 'assets/babysitter.png',
+    'Housemaid': 'assets/maid.png',
   };
-
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +41,7 @@ class _ServiceDetailsPageState extends State<ServiceDetailsPage> {
                 if (snapshot.connectionState == ConnectionState.done) {
                   if (snapshot.hasData && snapshot.data != null) {
                     UserModel userData = snapshot.data as UserModel;
-                    return _buildServiceDetails(
+                    return _buildServiceDetailsCurrentUser(
                         widget.jobindex, userData, physicalScreenSize);
                   } else if (snapshot.hasError) {
                     return Center(child: Text(snapshot.error.toString()));
@@ -62,7 +59,7 @@ class _ServiceDetailsPageState extends State<ServiceDetailsPage> {
     );
   }
 
-  Widget _buildServiceDetails(
+  Widget _buildServiceDetailsCurrentUser(
       int jobindex, UserModel userData, Size screensize) {
     Job job = userData.jobs[jobindex];
     String imagePath = jobImages[job.jobName] ?? 'default_image.png';
@@ -76,10 +73,26 @@ class _ServiceDetailsPageState extends State<ServiceDetailsPage> {
             height: 40,
             child: IconButton(
               onPressed: () {
-                print("Back button clicked");
                 Navigator.pop(context);
               },
               icon: Icon(Icons.arrow_back_ios_new_rounded),
+              color: Colors.black,
+              iconSize: 40,
+            ),
+          ),
+        ),
+        Positioned(
+          left: 280,
+          top: 39,
+          child: Container(
+            width: 40,
+            height: 40,
+            child: IconButton(
+              onPressed: () {
+                controller.deleteJob(job, userData);
+                Navigator.pushNamed(context, '/homepage');
+              },
+              icon: Icon(Icons.delete),
               color: Colors.black,
               iconSize: 40,
             ),
