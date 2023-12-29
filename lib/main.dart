@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:projeto_final/firebase/firebase_options.dart';
 import 'package:projeto_final/pages/chat_page.dart';
-import 'add_services.dart';
-import 'all_services.dart';
-import 'homepage.dart';
-import 'messages_page.dart';
-import 'search.dart';
-import 'login.dart';
-import 'register.dart';
-import 'editprofile.dart';
-import 'profile.dart';
-import 'search_profile.dart';
+import 'pages/add_services.dart';
+import 'pages/all_services.dart';
+import 'pages/homepage.dart';
+import 'pages/messages_page.dart';
+import 'pages/search.dart';
+import 'pages/login.dart';
+import 'pages/register.dart';
+import 'pages/editprofile.dart';
+import 'pages/profile.dart';
+import 'pages/search_profile.dart';
 import 'package:firebase_core/firebase_core.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
