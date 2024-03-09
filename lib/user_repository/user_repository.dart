@@ -125,6 +125,8 @@ class UserRepository {
   updateDms(String dm, UserModel user) {
     final userDoc = _db.collection('users').doc(user.id);
 
+    final otherUserDoc = _db.collection('users').doc(dm);
+
     // Check if the document exists
     final userDocSnapshot = userDoc.get();
     if (userDocSnapshot != null) {
@@ -135,6 +137,18 @@ class UserRepository {
     } else {
       // Document does not exist, handle the error or perform any necessary action
       print("Document not found: ${dm}");
+      // You might want to throw an exception or show a message to the user
+    }
+
+    final otherUserDocSnapshot = otherUserDoc.get();
+    if (otherUserDocSnapshot != null) {
+      // Document exists, proceed with the update
+      otherUserDoc.update({
+        'dms': FieldValue.arrayUnion([user.id])
+      });
+    } else {
+      // Document does not exist, handle the error or perform any necessary action
+      print("Document not found: ${user.id}");
       // You might want to throw an exception or show a message to the user
     }
   }

@@ -38,7 +38,7 @@ class _SearchPageState extends State<SearchPage> {
                             children: [
                               Positioned(
                                 left: physicalScreenSize.width / 2 - 310 / 2,
-                                top: 58,
+                                top: 100,
                                 child: const SizedBox(
                                   width: 310,
                                   height: 200,
@@ -51,41 +51,6 @@ class _SearchPageState extends State<SearchPage> {
                                       fontFamily: 'Roboto Mono',
                                       fontWeight: FontWeight.w700,
                                       height: 0,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Positioned(
-                                left: physicalScreenSize.width / 2 - 310 / 2,
-                                top: 258,
-                                child: Container(
-                                  width: 310,
-                                  height: 58,
-                                  decoration: ShapeDecoration(
-                                    color: const Color(0xFFD9D9D9),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                  ),
-                                  child: SizedBox(
-                                    width: 310,
-                                    height: 58,
-                                    child: Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Padding(
-                                        padding:
-                                            const EdgeInsets.only(left: 20),
-                                        child: Text(
-                                          'Search for a service',
-                                          style: TextStyle(
-                                            color:
-                                                Colors.black.withOpacity(0.6),
-                                            fontSize: 25,
-                                            fontFamily: 'Roboto Mono',
-                                            fontWeight: FontWeight.w700,
-                                          ),
-                                        ),
-                                      ),
                                     ),
                                   ),
                                 ),

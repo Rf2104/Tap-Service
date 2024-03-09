@@ -10,9 +10,8 @@ class FirebaseAuthService {
           email: email, password: password);
       return credential.user;
     } catch (e) {
-      print(e.toString());
+      throw e;
     }
-    return null;
   }
 
   Future<User?> signInWithEmailAndPassword(
