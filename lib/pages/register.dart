@@ -436,26 +436,42 @@ class _RegisterPageState extends State<RegisterPage> {
       return;
     }
 
-    User? user = await _auth.signUpWithEmailAndPassword(email, password);
+    try {
+      // Attempt to create a new user with the provided email and password
+      User? user = await _auth.signUpWithEmailAndPassword(email, password);
 
-    if (user != null) {
-      print("User created successfully");
-      Navigator.pushNamed(context, "/homepage");
-    } else {
-      print("User creation failed");
+      if (user != null) {
+        print("User created successfully");
+
+        // User registration was successful, now create user data in your repository
+        final userData = UserModel(
+          name: name.trim(),
+          email: email.trim(),
+          password: password.trim(),
+          location: '',
+          aboutMe: '',
+          jobs: [],
+          dms: [],
+        );
+
+        await userRepo.createUser(userData);
+        Navigator.pushNamed(context, '/homepage');
+      }
+    } catch (e) {
+      // Check if the exception is due to email already in use
+      if (e is FirebaseAuthException && e.code == 'email-already-in-use') {
+        // User already exists, log them in instead
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Email already in use'),
+            backgroundColor: Colors.red,
+          ),
+        );
+        return;
+      } else {
+        // Handle other exceptions if needed
+        print("User creation failed: $e");
+      }
     }
-
-    final userData = UserModel(
-      name: name.trim(),
-      email: email.trim(),
-      password: password.trim(),
-      location: '',
-      aboutMe: '',
-      jobs: [],
-      dms: [],
-    );
-
-    await userRepo.createUser(userData);
-    Navigator.pushNamed(context, '/homepage');
   }
 }

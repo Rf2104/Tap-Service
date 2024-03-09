@@ -50,6 +50,7 @@ class _MessagesPageState extends State<MessagesPage> {
   }
 
   Widget _buildUserList() {
+    final physicalScreenSize = MediaQuery.of(context).size;
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance.collection('users').snapshots(),
       builder: (context, snapshot) {
@@ -76,7 +77,7 @@ class _MessagesPageState extends State<MessagesPage> {
         return Stack(
           children: [
             Positioned(
-              left: 25,
+              left: physicalScreenSize.width / 2 - 150,
               top: 45,
               child: Container(
                 width: 300,

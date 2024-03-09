@@ -175,6 +175,9 @@ class _ChatPageState extends State<ChatPage> {
           children: [
             Expanded(
               child: TextField(
+                style: TextStyle(
+                  color: Colors.white,
+                ),
                 controller: _messageController,
                 obscureText: false,
                 decoration: InputDecoration(
